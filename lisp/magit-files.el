@@ -31,9 +31,57 @@
 ;;; Code:
 
 (eval-when-compile
+  (require 'dash)
   (require 'subr-x))
 
-(require 'magit)
+(require 'cl-lib)
+(require 'transient)
+
+(defvar magit-buffer-refname)
+(defvar magit-buffer-revision)
+(defvar magit-buffer-file-name)
+(defvar magit-wip-after-apply-mode)
+(defvar magit-wip-before-change-mode)
+
+(declare-function magit-diff-visit--offset "magit-diff")
+
+(declare-function magit-branch-or-commit-at-point "magit-git")
+(declare-function magit-changed-files "magit-git")
+(declare-function magit-convert-filename-for-git "magit-git")
+(declare-function magit-current-file "magit-git")
+(declare-function magit-file-relative-name "magit-git")
+(declare-function magit-file-tracked-p "magit-git")
+(declare-function magit-get-current-branch "magit-git")
+(declare-function magit-git-dir "magit-git")
+(declare-function magit-git-insert "magit-git")
+(declare-function magit-git-lines "magit-git")
+(declare-function magit-git-string "magit-git")
+(declare-function magit-inside-worktree-p "magit-git")
+(declare-function magit-list-files "magit-git")
+(declare-function magit-list-refnames "magit-git")
+(declare-function magit-read-branch-or-commit "magit-git")
+(declare-function magit-rev-format "magit-git")
+(declare-function magit-revision-files "magit-git")
+(declare-function magit-toplevel "magit-git")
+(declare-function magit-untracked-files "magit-git")
+(declare-function magit-with-toplevel "magit-git")
+
+(declare-function magit-call-git "magit-process")
+(declare-function magit-run-git "magit-process")
+
+(declare-function magit-get-mode-buffer "magit-mode")
+(declare-function magit-refresh "magit-mode")
+
+(declare-function magit--age "magit-margin")
+(declare-function magit-region-values "magit-section")
+
+(declare-function magit-section-value-if "magit-section")
+
+(declare-function magit-completing-read "magit-utils")
+(declare-function magit-confirm-files "magit-utils")
+
+(declare-function magit-wip-commit-before-change "magit-wip")
+(declare-function magit-wip-commit-after-apply "magit-wip")
 
 ;;; Find Blob
 
@@ -281,14 +329,6 @@ directory, while reading the FILENAME."
 
 ;;; File Mode
 
-(defvar magit-file-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "\C-xg"    'magit-status)
-    (define-key map "\C-x\M-g" 'magit-dispatch)
-    (define-key map "\C-c\M-g" 'magit-file-dispatch)
-    map)
-  "Keymap for `magit-file-mode'.")
-
 ;;;###autoload (autoload 'magit-file-dispatch "magit" nil t)
 (transient-define-prefix magit-file-dispatch ()
   "Invoke a Magit command that acts on the visited file."
@@ -318,6 +358,14 @@ directory, while reading the FILENAME."
     (5 "C-c d" "Delete file"   magit-file-delete)
     (5 "C-c u" "Untrack file"  magit-file-untrack)
     (5 "C-c c" "Checkout file" magit-file-checkout)]])
+
+(defvar magit-file-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-xg"    'magit-status)
+    (define-key map "\C-x\M-g" 'magit-dispatch)
+    (define-key map "\C-c\M-g" 'magit-file-dispatch)
+    map)
+  "Keymap for `magit-file-mode'.")
 
 (defvar magit-file-mode-lighter "")
 
