@@ -10,6 +10,7 @@ all: lisp
 ## Build order #######################################################
 
 git-commit.elc:
+magit-file-modes:       magit-git.el magit-process.el
 magit-utils.elc:
 magit-section.elc:
 ifeq "$(BUILD_MAGIT_LIBGIT)" "true"

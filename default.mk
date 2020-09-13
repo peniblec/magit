@@ -68,6 +68,7 @@ ELS += magit-repos.el
 ELS += magit.el
 ELS += magit-status.el
 ELS += magit-refs.el
+ELS += magit-file-modes.el
 ELS += magit-files.el
 ELS += magit-reset.el
 ELS += magit-branch.el
