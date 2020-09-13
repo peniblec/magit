@@ -30,6 +30,9 @@
 
 ;;; Code:
 
+(require 'magit-git)
+(require 'magit-process)
+
 (eval-when-compile
   (require 'dash)
   (require 'subr-x))
@@ -44,27 +47,6 @@
 (defvar magit-wip-before-change-mode)
 
 (declare-function magit-diff-visit--offset "magit-diff")
-
-(declare-function magit-branch-or-commit-at-point "magit-git")
-(declare-function magit-changed-files "magit-git")
-(declare-function magit-convert-filename-for-git "magit-git")
-(declare-function magit-current-file "magit-git")
-(declare-function magit-file-relative-name "magit-git")
-(declare-function magit-file-tracked-p "magit-git")
-(declare-function magit-get-current-branch "magit-git")
-(declare-function magit-git-dir "magit-git")
-(declare-function magit-git-insert "magit-git")
-(declare-function magit-git-lines "magit-git")
-(declare-function magit-git-string "magit-git")
-(declare-function magit-inside-worktree-p "magit-git")
-(declare-function magit-list-files "magit-git")
-(declare-function magit-list-refnames "magit-git")
-(declare-function magit-read-branch-or-commit "magit-git")
-(declare-function magit-rev-format "magit-git")
-(declare-function magit-revision-files "magit-git")
-(declare-function magit-toplevel "magit-git")
-(declare-function magit-untracked-files "magit-git")
-(declare-function magit-with-toplevel "magit-git")
 
 (declare-function magit-call-git "magit-process")
 (declare-function magit-run-git "magit-process")
